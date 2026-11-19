@@ -53,28 +53,28 @@ header[data-testid="stHeader"] { background: transparent; height: 0; }
 .navlocal nav a.pildora { background: var(--azul); color: #fff !important; padding: 5px 12px; border-radius: 980px; opacity: 1; font-weight: 500; }
 
 /* Portada */
-.heroa { background: var(--negro); color: #fff; text-align: center; padding: 150px 22px 90px; }
-.heroa .nuevo { font-size: 17px; font-weight: 600; color: #F56300; letter-spacing: -0.01em; margin-bottom: 14px; }
-.heroa h1 { font-size: clamp(44px, 7.4vw, 88px) !important; line-height: 1.05 !important; font-weight: 700 !important; letter-spacing: -0.035em !important; color: #F5F5F7 !important; margin: 0 auto !important; max-width: 980px; padding: 0 !important; }
-.grad { background: linear-gradient(90deg, #FF9F0A 0%, #FF375F 45%, #BF5AF2 100%); -webkit-background-clip: text; background-clip: text; color: transparent !important; -webkit-text-fill-color: transparent; }
-.heroa .sub { font-size: clamp(19px, 2.2vw, 24px) !important; color: var(--gris-2) !important; max-width: 700px; margin: 26px auto 0 !important; line-height: 1.35 !important; font-weight: 500; letter-spacing: -0.015em; }
+.heroa { background: #FBFBFD; color: var(--tinta); text-align: center; padding: 150px 22px 80px; }
+.heroa .nuevo { font-size: 17px; font-weight: 600; color: var(--gris); letter-spacing: -0.01em; margin-bottom: 14px; }
+.heroa h1 { font-size: clamp(44px, 7.4vw, 88px) !important; line-height: 1.05 !important; font-weight: 700 !important; letter-spacing: -0.035em !important; color: var(--tinta) !important; margin: 0 auto !important; max-width: 980px; padding: 0 !important; }
+.grad { color: var(--gris-2) !important; }
+.heroa .sub { font-size: clamp(19px, 2.2vw, 24px) !important; color: var(--gris) !important; max-width: 700px; margin: 26px auto 0 !important; line-height: 1.35 !important; font-weight: 500; letter-spacing: -0.015em; }
 .heroa .acciones { margin-top: 34px; display: flex; gap: 26px; justify-content: center; align-items: center; flex-wrap: wrap; }
 .btn-azul { background: var(--azul); color: #fff !important; text-decoration: none !important; font-size: 17px; padding: 12px 24px; border-radius: 980px; font-weight: 500; }
 .btn-azul:hover { background: #0077ED; }
-.link-azul { color: var(--azul-oscuro) !important; text-decoration: none !important; font-size: 17px; }
+.link-azul { color: var(--azul-link) !important; text-decoration: none !important; font-size: 17px; }
 .link-azul:hover { text-decoration: underline !important; }
 .heroa .autores { margin-top: 64px; font-size: 14px; color: var(--gris-2); line-height: 1.6; }
-.heroa .autores b { color: #F5F5F7; font-weight: 600; display: block; font-size: 17px; }
+.heroa .autores b { color: var(--tinta); font-weight: 600; display: block; font-size: 17px; }
 .demo.demo-claro { color: var(--gris) !important; border-color: var(--linea) !important; margin: 0 0 18px; }
-.demo { display: inline-block; margin-top: 18px; font-size: 12px; color: #F5F5F7; border: 1px solid #424245; border-radius: 980px; padding: 4px 12px; }
+.demo { display: inline-block; margin-top: 18px; font-size: 12px; color: var(--gris); border: 1px solid var(--linea); border-radius: 980px; padding: 4px 12px; }
 
 /* Cronología */
-.crono { background: var(--negro); padding: 10px 0 110px; overflow: hidden; }
+.crono { background: #FBFBFD; padding: 36px 0 40px; overflow: hidden; border-top: 1px solid var(--linea); border-bottom: 1px solid var(--linea); }
 .crono-fila { display: flex; justify-content: center; gap: clamp(18px, 3.4vw, 46px); flex-wrap: nowrap; }
 .crono-fila div { text-align: center; }
-.crono-fila b { display: block; font-size: clamp(30px, 4.6vw, 56px); font-weight: 700; letter-spacing: -0.03em; color: #F5F5F7; line-height: 1; }
+.crono-fila b { display: block; font-size: clamp(26px, 3.6vw, 44px); font-weight: 600; letter-spacing: -0.03em; color: var(--tinta); line-height: 1; }
 .crono-fila span { display: block; font-size: 12px; color: var(--gris-2); margin-top: 10px; letter-spacing: 0; }
-.crono-fila div:nth-child(odd) b { color: #424245; }
+.crono-fila div:nth-child(odd) b { color: var(--gris-2); }
 
 /* Secciones */
 .seccion { padding: 110px 0 36px; text-align: center; scroll-margin-top: 60px; }
@@ -96,13 +96,13 @@ header[data-testid="stHeader"] { background: transparent; height: 0; }
 /* Papeles de la IA */
 .franja-negra { background: var(--negro); padding: 6px 0 40px; }
 [data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .tile-rol) {
-  background: #1D1D1F; border-radius: 28px; padding: 36px 30px 24px; min-height: 360px; transition: transform .25s ease;
+  background: var(--gris-fondo); border-radius: 28px; padding: 36px 30px 24px; min-height: 340px; transition: transform .25s ease;
 }
 [data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .tile-rol):hover { transform: scale(1.012); }
-[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .rol-sel) { box-shadow: 0 0 0 2px var(--azul-oscuro) !important; }
-.rol-eti { font-size: 14px; font-weight: 600; color: var(--gris-2); }
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .rol-sel) { box-shadow: 0 0 0 2px var(--azul) !important; background: #FFFFFF; }
+.rol-eti { font-size: 14px; font-weight: 600; color: var(--gris); }
 .rol-nombre { font-size: clamp(28px, 3.1vw, 40px); white-space: nowrap; font-weight: 700; letter-spacing: -0.035em; line-height: 1.05; margin-top: 6px; }
-.rol-texto { font-size: 17px; color: #A1A1A6 !important; line-height: 1.45; margin-top: 16px; min-height: 6em; letter-spacing: -0.02em; }
+.rol-texto { font-size: 17px; color: var(--gris) !important; line-height: 1.45; margin-top: 16px; min-height: 6em; letter-spacing: -0.02em; }
 .rol-meta { font-size: 12px; color: var(--gris-2); margin: 14px 0 4px; }
 .seccion-oscura { background: var(--negro); }
 .seccion-oscura h2 { color: #F5F5F7 !important; }
@@ -139,7 +139,7 @@ header[data-testid="stHeader"] { background: transparent; height: 0; }
 .stButton button:disabled { background: #E8E8ED !important; }
 .stButton button:disabled p { color: #AEAEB2 !important; }
 [data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .tile-esc) .stButton, [data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .tile-rol) .stButton { margin-left: -18px; }
-[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .tile-rol) .stButton button:not([kind="primary"]) { color: var(--azul-oscuro) !important; }
+
 .st-key-comenzar { display: flex; justify-content: center; }
 .st-key-comenzar button { padding: 14px 34px !important; }
 .st-key-comenzar button p { font-size: 19px !important; }
@@ -155,7 +155,7 @@ header[data-testid="stHeader"] { background: transparent; height: 0; }
 
 /* Sesión */
 .cab-sesion { padding: 70px 0 18px; border-bottom: 1px solid var(--linea); margin-bottom: 26px; }
-.cab-sesion .eti { font-size: 17px; font-weight: 600; color: #F56300; }
+.cab-sesion .eti { font-size: 17px; font-weight: 600; color: var(--gris); }
 .cab-sesion h2 { font-size: clamp(36px, 5vw, 52px) !important; font-weight: 700 !important; letter-spacing: -0.035em !important; line-height: 1.07 !important; margin: 4px 0 0 !important; padding: 0 !important; color: var(--tinta) !important; }
 [data-testid="stChatMessage"] { background: transparent; padding: 0; margin-bottom: 18px; gap: 0; }
 [data-testid="stChatMessage"] > div[aria-hidden="true"], [data-testid="stChatMessage"] [data-testid*="Avatar"], [data-testid="stChatMessageAvatarUser"], [data-testid="stChatMessageAvatarAssistant"], [data-testid="stChatMessageAvatarCustom"] { display: none !important; }
@@ -166,14 +166,14 @@ header[data-testid="stHeader"] { background: transparent; height: 0; }
 [data-testid="stChatMessage"]:not(:has(.msg-user)) [data-testid="stChatMessageContent"] { border-bottom-left-radius: 6px; }
 [data-testid="stChatMessage"] p { font-size: 17px; line-height: 1.5; }
 [data-testid="stElementContainer"]:has(.msg-user), .msg-user { display: none; }
-.stApp blockquote { border-left: 3px solid transparent !important; border-image: linear-gradient(#FF9F0A, #BF5AF2) 1 !important; background: #FFFFFF !important; border-radius: 0 14px 14px 0; padding: 14px 20px !important; margin: 14px 0 !important; opacity: 1 !important; }
+.stApp blockquote { border-left: 3px solid #1D1D1F !important; background: #FFFFFF !important; border-radius: 0 14px 14px 0; padding: 14px 20px !important; margin: 14px 0 !important; opacity: 1 !important; }
 html body .stApp blockquote :is(p,span,em,strong):not([data-testid="stIconMaterial"]):not(.material-symbols-rounded):not(.x-serif) { font-family: var(--serif) !important; font-size: 18px; line-height: 1.55; color: #1D1D1F !important; font-style: italic; }
 [data-testid="stBottom"] > div { background: rgba(255,255,255,.9); }
 [data-testid="stChatInput"] { border-radius: 980px !important; border: 1px solid var(--linea) !important; background: #FFFFFF !important; }
 [data-testid="stChatInput"]:focus-within { border-color: var(--azul) !important; box-shadow: 0 0 0 4px rgba(0,113,227,.15); }
 [data-testid="stChatInputSubmitButton"] { background: var(--azul) !important; border-radius: 50% !important; color: #FFF !important; }
 [data-testid="stSidebar"] { background: var(--gris-fondo); border-right: 1px solid var(--linea); }
-[data-testid="stSidebar"] .eyebrow { font-size: 12px; font-weight: 600; color: #F56300; text-transform: none; }
+[data-testid="stSidebar"] .eyebrow { font-size: 12px; font-weight: 600; color: var(--gris); text-transform: none; }
 [data-testid="stSidebar"] h3 { font-size: 28px !important; font-weight: 700 !important; letter-spacing: -0.03em; line-height: 1.1; color: var(--tinta) !important; }
 [data-testid="stSidebar"] h4 { font-size: 12px !important; font-weight: 600 !important; color: var(--gris) !important; text-transform: uppercase; letter-spacing: .04em; margin-top: 22px; }
 .chip { display: inline-block; padding: 4px 12px; border-radius: 980px; background: #FFFFFF; border: 1px solid var(--linea); font-size: 12px; margin: 0 6px 6px 0; color: var(--tinta); }
@@ -287,7 +287,7 @@ def autores_html(clase_autor: str = "autor") -> str:
 @st.cache_data(show_spinner=False)
 def cifras_corpus() -> tuple[int, int]:
     import pathlib, re as _re
-    archivos = {p.name: p for p in pathlib.Path("corpus").glob("*/*.md") if p.name != "LEEME.md"}  # sin repetidos
+    archivos = {p.name: p for e in ESCUELAS for p in (pathlib.Path("corpus") / e).glob("*.md")}  # solo obras, sin repetidos
     titulos = [p.read_text(encoding="utf-8").split("\n", 1)[0] for p in archivos.values()]
     autores = set()
     for t in titulos:
@@ -297,9 +297,9 @@ def cifras_corpus() -> tuple[int, int]:
     return len(titulos), len(autores)
 
 
-def gtxt(texto: str, gradiente: str) -> str:
-    return (f"<span style='background:{gradiente};-webkit-background-clip:text;background-clip:text;"
-            f"color:transparent;-webkit-text-fill-color:transparent'>{texto}</span>")
+def gtxt(texto: str, gradiente: str = "") -> str:
+    """Diseño sobrio: cifras y títulos en tinta, sin degradados."""
+    return f"<span style='color:#1D1D1F'>{texto}</span>"
 
 
 def pantalla_inicio():

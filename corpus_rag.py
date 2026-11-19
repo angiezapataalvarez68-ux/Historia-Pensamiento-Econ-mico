@@ -1,8 +1,12 @@
 """
 Búsqueda en el corpus del curso (RAG cerrado).
 
-Cada escuela tiene una carpeta en corpus/<escuela>/ con archivos .md o .txt.
-La ficha de la escuela (Cuadro 2) siempre forma parte del corpus.
+Cada escuela tiene una carpeta en corpus/<escuela>/ con las obras originales.
+Los comentarios académicos (libros y artículos de especialistas) van en:
+    corpus/comentarios/            → se usan con todas las escuelas
+    corpus/comentarios/<escuela>/  → solo con esa escuela
+Se aceptan archivos .md, .txt, .pdf y .docx.
+La ficha de la escuela (Cuadro 2) siempre forma parte del corpus como orientación interna.
 
 Formato recomendado para cada archivo del corpus:
     La primera línea es el título de la fuente, precedido de "# ".
@@ -29,6 +33,7 @@ MAX_PALABRAS_FRAGMENTO = 220
 class Fragmento:
     fuente: str
     texto: str
+    tipo: str = "obra"  # "obra" (fuente primaria) o "comentario" (interpretación académica)
 
 
 def _normalizar(texto: str) -> str:
@@ -80,23 +85,66 @@ def _partir(texto: str) -> list[str]:
     return trozos
 
 
+def _leer_pdf(archivo: Path) -> str:
+    from pypdf import PdfReader
+    paginas = [pag.extract_text() or "" for pag in PdfReader(str(archivo)).pages]
+    # En los PDF los párrafos vienen cortados por renglones: se unen las líneas y se
+    # separa en párrafos donde hay un punto final al terminar la línea.
+    texto = "\n".join(paginas).replace("-\n", "")
+    texto = re.sub(r"(?<![.:;!?»”])\n(?!\n)", " ", texto)
+    return texto.replace("\n", "\n\n")
+
+
+def _leer_docx(archivo: Path) -> str:
+    import zipfile
+    from xml.etree import ElementTree as ET
+    ns = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
+    with zipfile.ZipFile(archivo) as z:
+        raiz = ET.fromstring(z.read("word/document.xml"))
+    parrafos = ["".join(t.text or "" for t in p.iter(f"{{{ns['w']}}}t")) for p in raiz.iter(f"{{{ns['w']}}}p")]
+    return "\n\n".join(p for p in parrafos if p.strip())
+
+
+def _leer_archivo(archivo: Path) -> tuple[str, str] | None:
+    """Devuelve (fuente, cuerpo) o None si el archivo no es del corpus."""
+    sufijo = archivo.suffix.lower()
+    if archivo.name.lower().startswith("leeme") or sufijo not in {".md", ".txt", ".pdf", ".docx"}:
+        return None
+    try:
+        if sufijo == ".pdf":
+            contenido = _leer_pdf(archivo)
+        elif sufijo == ".docx":
+            contenido = _leer_docx(archivo)
+        else:
+            contenido = archivo.read_text(encoding="utf-8")
+    except Exception as err:  # un archivo dañado no debe tumbar la app
+        print(f"[corpus] No pude leer {archivo.name}: {err}", flush=True)
+        return None
+    lineas = contenido.splitlines()
+    if lineas and lineas[0].startswith("# "):
+        fuente, cuerpo = lineas[0][2:].strip(), "\n".join(lineas[1:])
+    else:
+        fuente, cuerpo = archivo.stem.replace("_", " "), contenido
+    # La nota bibliográfica en cursiva (_..._) no es texto de la obra: no se indexa.
+    cuerpo = re.sub(r"^_.*_\s*$", "", cuerpo, flags=re.M)
+    return fuente, cuerpo
+
+
 def cargar_fragmentos(escuela_id: str) -> list[Fragmento]:
     fragmentos = [_ficha(escuela_id)]
-    carpeta = CORPUS_DIR / escuela_id
-    if not carpeta.exists():
-        return fragmentos
-    for archivo in sorted(carpeta.glob("*")):
-        if archivo.suffix.lower() not in {".md", ".txt"} or archivo.name.lower() == "leeme.md":
+    fuentes = [(CORPUS_DIR / escuela_id, "obra"),
+               (CORPUS_DIR / "comentarios", "comentario"),
+               (CORPUS_DIR / "comentarios" / escuela_id, "comentario")]
+    for carpeta, tipo in fuentes:
+        if not carpeta.exists():
             continue
-        contenido = archivo.read_text(encoding="utf-8")
-        lineas = contenido.splitlines()
-        if lineas and lineas[0].startswith("# "):
-            fuente, cuerpo = lineas[0][2:].strip(), "\n".join(lineas[1:])
-        else:
-            fuente, cuerpo = archivo.stem.replace("_", " "), contenido
-        # La nota bibliográfica en cursiva (_..._) no es texto de la obra: no se indexa.
-        cuerpo = re.sub(r"^_.*_\s*$", "", cuerpo, flags=re.M)
-        fragmentos += [Fragmento(fuente, t) for t in _partir(cuerpo)]
+        for archivo in sorted(carpeta.glob("*")):
+            if not archivo.is_file():
+                continue
+            leido = _leer_archivo(archivo)
+            if leido:
+                fuente, cuerpo = leido
+                fragmentos += [Fragmento(fuente, t, tipo) for t in _partir(cuerpo)]
     return fragmentos
 
 # Las fuentes primarias están en su idioma original (casi todas en inglés) y los
@@ -165,30 +213,35 @@ class Buscador:
     def fuentes(self) -> list[str]:
         return sorted({f.fuente for f in self.fragmentos})
 
-    def buscar(self, consulta: str, k: int = 5) -> list[Fragmento]:
-        """La ficha siempre va primero; luego los k fragmentos más parecidos."""
+    def buscar(self, consulta: str, k: int = 5, k_comentarios: int = 2) -> list[Fragmento]:
+        """La ficha va primero; luego los k pasajes de obras y hasta k_comentarios comentarios más parecidos."""
         resultado = [self.fragmentos[0]]
         if len(self.fragmentos) == 1 or not consulta.strip():
             return resultado
         sims = cosine_similarity(self.vectorizador.transform([_expandir(consulta)]), self.matriz).ravel()
         orden = sims[1:].argsort()[::-1] + 1
-        resultado += [self.fragmentos[i] for i in orden[:k] if sims[i] > 0.02]
-        return resultado
+        obras = [i for i in orden if self.fragmentos[i].tipo == "obra" and sims[i] > 0.02][:k]
+        coments = [i for i in orden if self.fragmentos[i].tipo == "comentario" and sims[i] > 0.02][:k_comentarios]
+        return resultado + [self.fragmentos[i] for i in obras + coments]
 
 
 def formatear_contexto(fragmentos: list[Fragmento]) -> str:
     """La ficha del curso va aparte, como orientación interna que no se cita."""
     ficha = [f for f in fragmentos if f.fuente.startswith("Ficha del curso")]
-    obras = [f for f in fragmentos if not f.fuente.startswith("Ficha del curso")]
+    obras = [f for f in fragmentos if f.tipo == "obra" and not f.fuente.startswith("Ficha del curso")]
+    coments = [f for f in fragmentos if f.tipo == "comentario"]
     partes = []
     if ficha:
         partes.append("ORIENTACIÓN INTERNA DEL CURSO (no es una fuente: úsala para guiar la conversación, "
                       "pero NUNCA la cites ni la menciones como fuente):\n" + ficha[0].texto)
     if obras:
-        partes.append("PASAJES DE LAS OBRAS ORIGINALES (son las únicas fuentes que puedes citar, textualmente):")
-        for i, f in enumerate(obras, 1):
-            partes.append(f"[{i}] Obra: {f.fuente}\n{f.texto}")
-    else:
-        partes.append("No se encontraron pasajes de las obras para esta consulta: no inventes citas; "
+        partes.append("PASAJES DE LAS OBRAS ORIGINALES (fuentes primarias; cítalas textualmente):")
+        partes += [f"[{i}] Obra: {f.fuente}\n{f.texto}" for i, f in enumerate(obras, 1)]
+    if coments:
+        partes.append("COMENTARIOS ACADÉMICOS (interpretaciones de especialistas; si los usas, cítalos como "
+                      "interpretación del comentarista, nunca como palabras del autor estudiado):")
+        partes += [f"[C{i}] Comentario: {f.fuente}\n{f.texto}" for i, f in enumerate(coments, 1)]
+    if not obras and not coments:
+        partes.append("No se encontraron pasajes para esta consulta: no inventes citas; "
                       "pide al estudiante que precise la pregunta o razona sin citar.")
     return "\n\n".join(partes)
