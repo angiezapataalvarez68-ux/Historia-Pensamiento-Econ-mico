@@ -1,6 +1,7 @@
 """
 Historia del pensamiento económico — Taller con IA
 Proyecto de Alexander Tobón Arias.
+Paola Zapata.
 App para el trabajo independiente del curso de Historia del Pensamiento Económico.
 Tobón y Zapata (2026). Roles de Mollick y Mollick (2023); método de Marcuzzo (2008).
 
@@ -24,136 +25,165 @@ st.set_page_config(page_title="Historia del pensamiento económico", page_icon="
 st.markdown(
     """
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 :root {
-  --fondo: #FAF9F6; --tarjeta: #FFFFFF; --lateral: #F2F2EE; --linea: #E2E2DC;
-  --oliva: #3D4F3D; --salvia: #556B52; --cita-fondo: #F0F3EF; --oliva-claro: #E6EBE4;
-  --tinta: #1D1D1F; --gris: #6E6E73;
-  --sombra: 0 4px 20px rgba(0, 0, 0, 0.03);
-  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", sans-serif;
-  --serif: "Cormorant Garamond", "Georgia", serif;
+  --negro: #000000; --blanco: #FFFFFF; --gris-fondo: #F5F5F7; --tinta: #1D1D1F; --gris: #6E6E73; --gris-2: #86868B;
+  --azul: #0071E3; --azul-link: #0066CC; --azul-oscuro: #2997FF; --linea: #D2D2D7;
+  --sf: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Helvetica Neue", "Segoe UI", sans-serif;
+  --serif: "New York", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
 }
-
-/* Limpieza */
 #MainMenu {visibility: hidden;} footer {visibility: hidden;}
-header[data-testid="stHeader"] { background: transparent; }
+header[data-testid="stHeader"] { background: transparent; height: 0; }
 [data-testid="stToolbar"], [data-testid="stDecoration"] { display: none; }
+[data-testid="stMain"], section.main { overflow-x: hidden; }
+.stApp :is(h1,h2,h3,h4,h5,p,li,dt,dd,label,a,input,textarea,button,div,span):not([data-testid="stIconMaterial"]):not(.material-symbols-rounded) { font-family: var(--sf) !important; }
+.stApp { background: var(--blanco); color: var(--tinta); -webkit-font-smoothing: antialiased; }
+.stApp p, .stApp li { line-height: 1.47; letter-spacing: -0.022em; color: var(--tinta); }
+.block-container { max-width: 1024px; padding-top: 0 !important; padding-bottom: 0; }
+.ancho { width: 100vw; margin-left: calc(50% - 50vw); }
 
-/* Base */
-.stApp :is(h1,h2,h3,h4,h5,p,li,dt,dd,label,a,input,textarea,button,div,span):not([data-testid="stIconMaterial"]):not(.material-symbols-rounded) { font-family: var(--sans) !important; }
-.stApp { background: var(--fondo); color: var(--tinta); -webkit-font-smoothing: antialiased; }
-.stApp p, .stApp li { line-height: 1.65; color: var(--tinta); }
-h1, h2, h3, h4 { font-weight: 600 !important; letter-spacing: -0.025em; color: var(--tinta) !important; }
-.block-container { max-width: 960px; padding-top: 3rem; padding-bottom: 5rem; }
-html body .stApp :is(.titulo, .titulo *, .cabecera-sesion h2 *, .cap-num, .cap-titulo, .indice-num, .indice-nombre, .rol-nombre, .res-txt, .res-txt em, .cabecera-sesion h2, .filete i, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] h3 span):not(#_a):not(#_b) { font-family: var(--serif) !important; }
+/* Barra de navegación local */
+.navlocal { position: fixed; top: 0; left: 0; right: 0; z-index: 999991; height: 52px; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 max(22px, calc(50vw - 490px)); background: rgba(251,251,253,.78); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(0,0,0,.08); }
+.navlocal .marca { font-size: 19px; font-weight: 600; letter-spacing: -0.02em; color: var(--tinta); }
+.navlocal nav { display: flex; align-items: center; gap: 22px; }
+.navlocal nav a { font-size: 12.5px; color: var(--tinta) !important; text-decoration: none; opacity: .85; }
+.navlocal nav a:hover { opacity: 1; color: var(--azul-link) !important; }
+.navlocal nav a.pildora { background: var(--azul); color: #fff !important; padding: 5px 12px; border-radius: 980px; opacity: 1; font-weight: 500; }
 
 /* Portada */
-.portada { text-align: center; padding: 3.5rem 0 1rem; }
-.sello { display: inline-block; font-size: .72rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; color: var(--oliva);
-  border-top: 1px solid var(--oliva); border-bottom: 1px solid var(--oliva); padding: .45rem 1rem; margin-bottom: 2.2rem; }
-.titulo { font-size: clamp(2.6rem, 7.2vw, 5.2rem) !important; line-height: .95 !important; font-weight: 500 !important; letter-spacing: -0.02em !important; margin: 0 !important; color: var(--tinta) !important; }
-.titulo em { font-style: italic; color: var(--oliva); font-weight: 500; }
-.filete { display: flex; align-items: center; justify-content: center; gap: 1rem; margin: 2.2rem auto 1.8rem; max-width: 300px; }
-.filete span { flex: 1; height: 1px; background: var(--linea); }
-.filete i { font-style: normal; color: var(--salvia); font-size: 1.3rem; }
-.bajada { font-size: 1.15rem !important; color: var(--gris) !important; max-width: 600px; margin: 0 auto !important; line-height: 1.65 !important; }
-.autoria { margin-top: 1.8rem; font-size: .9rem; color: var(--gris); letter-spacing: .01em; }
-.autoria strong { color: var(--tinta); font-weight: 600; }
-.demo { display: inline-block; margin-top: 1.2rem; font-size: .75rem; color: var(--oliva); background: var(--oliva-claro); border-radius: 999px; padding: .3rem .9rem; }
+.heroa { background: var(--negro); color: #fff; text-align: center; padding: 150px 22px 90px; }
+.heroa .nuevo { font-size: 17px; font-weight: 600; color: #F56300; letter-spacing: -0.01em; margin-bottom: 14px; }
+.heroa h1 { font-size: clamp(44px, 7.4vw, 88px) !important; line-height: 1.05 !important; font-weight: 700 !important; letter-spacing: -0.035em !important; color: #F5F5F7 !important; margin: 0 auto !important; max-width: 980px; padding: 0 !important; }
+.grad { background: linear-gradient(90deg, #FF9F0A 0%, #FF375F 45%, #BF5AF2 100%); -webkit-background-clip: text; background-clip: text; color: transparent !important; -webkit-text-fill-color: transparent; }
+.heroa .sub { font-size: clamp(19px, 2.2vw, 24px) !important; color: var(--gris-2) !important; max-width: 700px; margin: 26px auto 0 !important; line-height: 1.35 !important; font-weight: 500; letter-spacing: -0.015em; }
+.heroa .acciones { margin-top: 34px; display: flex; gap: 26px; justify-content: center; align-items: center; flex-wrap: wrap; }
+.btn-azul { background: var(--azul); color: #fff !important; text-decoration: none !important; font-size: 17px; padding: 12px 24px; border-radius: 980px; font-weight: 500; }
+.btn-azul:hover { background: #0077ED; }
+.link-azul { color: var(--azul-oscuro) !important; text-decoration: none !important; font-size: 17px; }
+.link-azul:hover { text-decoration: underline !important; }
+.heroa .autores { margin-top: 64px; font-size: 14px; color: var(--gris-2); line-height: 1.6; }
+.heroa .autores b { color: #F5F5F7; font-weight: 600; display: block; font-size: 17px; }
+.demo.demo-claro { color: var(--gris) !important; border-color: var(--linea) !important; margin: 0 0 18px; }
+.demo { display: inline-block; margin-top: 18px; font-size: 12px; color: #F5F5F7; border: 1px solid #424245; border-radius: 980px; padding: 4px 12px; }
 
-/* Capítulos */
-.capitulo { display: flex; align-items: baseline; gap: 1.2rem; margin: 4.5rem 0 1.4rem; padding-bottom: 1rem; border-bottom: 1px solid var(--tinta); }
-.cap-num { font-size: 2.6rem; font-style: italic; color: var(--oliva); line-height: 1; min-width: 2.6rem; font-weight: 500; }
-.cap-titulo { font-size: 2rem; font-weight: 600; letter-spacing: -0.015em; line-height: 1.1; color: var(--tinta); }
-.cap-sub { font-size: .92rem; color: var(--gris); margin-top: .3rem; }
+/* Cronología */
+.crono { background: var(--negro); padding: 10px 0 110px; overflow: hidden; }
+.crono-fila { display: flex; justify-content: center; gap: clamp(18px, 3.4vw, 46px); flex-wrap: nowrap; }
+.crono-fila div { text-align: center; }
+.crono-fila b { display: block; font-size: clamp(30px, 4.6vw, 56px); font-weight: 700; letter-spacing: -0.03em; color: #F5F5F7; line-height: 1; }
+.crono-fila span { display: block; font-size: 12px; color: var(--gris-2); margin-top: 10px; letter-spacing: 0; }
+.crono-fila div:nth-child(odd) b { color: #424245; }
 
-/* Índice de escuelas */
-[data-testid="stHorizontalBlock"]:has(.indice-num) { border-bottom: 1px solid var(--linea); padding: 1rem .6rem; margin: 0 !important; transition: background .2s ease; border-radius: 0; }
-[data-testid="stHorizontalBlock"]:has(.indice-num):hover { background: rgba(61,79,61,.035); }
-[data-testid="stHorizontalBlock"]:has(.fila-elegida) { background: var(--cita-fondo); box-shadow: inset 3px 0 0 var(--oliva); }
-.indice-num { font-size: 1.9rem; font-style: italic; color: #A4AE9F; text-align: center; font-weight: 500; }
-.fila-elegida.indice-num { color: var(--oliva); }
-.indice-nombre { font-size: 1.65rem; font-weight: 600; letter-spacing: -0.01em; line-height: 1.15; color: var(--tinta); }
-.indice-lema { font-size: .92rem; color: var(--gris); margin-top: .2rem; line-height: 1.5; }
-.indice-periodo { display: block; color: #9A9A9F; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; margin-top: .25rem; }
+/* Secciones */
+.seccion { padding: 110px 0 36px; text-align: center; scroll-margin-top: 60px; }
+.seccion .eti { font-size: 17px; font-weight: 600; color: var(--gris); margin-bottom: 8px; }
+.seccion h2 { font-size: clamp(36px, 5.2vw, 56px) !important; font-weight: 700 !important; letter-spacing: -0.03em !important; line-height: 1.07 !important; color: var(--tinta) !important; margin: 0 !important; padding: 0 !important; }
+.seccion p { font-size: 21px !important; color: var(--gris) !important; max-width: 640px; margin: 18px auto 0 !important; line-height: 1.38 !important; }
 
-/* Roles */
-[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .rol-nombre) {
-  background: var(--tarjeta); border: 1px solid var(--linea) !important; border-radius: 16px !important; box-shadow: var(--sombra);
-  padding: 1.6rem 1.4rem 1.3rem; transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+/* Mosaico de escuelas */
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .tile-esc) {
+  background: var(--gris-fondo); border-radius: 28px; padding: 34px 30px 22px; min-height: 330px; transition: transform .25s ease, box-shadow .25s ease;
 }
-[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .rol-nombre):hover { box-shadow: 0 10px 30px rgba(0,0,0,.06); transform: translateY(-2px); }
-[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .rol-elegido) { border-color: var(--oliva) !important; box-shadow: 0 0 0 1px var(--oliva), var(--sombra); }
-.rol-pre { font-size: .72rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--salvia); }
-.rol-nombre { font-size: 2.4rem; font-style: italic; font-weight: 500; line-height: 1.05; color: var(--tinta); margin: .15rem 0 .8rem; }
-.rol-texto { font-size: .93rem; color: var(--gris); line-height: 1.6; min-height: 6.2rem; }
-.rol-meta { font-size: .78rem; color: #9A9A9F; border-top: 1px solid var(--linea); padding-top: .7rem; margin: .6rem 0 .3rem; }
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .tile-esc):hover { transform: scale(1.012); box-shadow: 0 8px 30px rgba(0,0,0,.08); }
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .tile-sel) { box-shadow: 0 0 0 2px var(--azul) !important; background: #FFFFFF; }
+.tile-anio { font-size: 64px; font-weight: 700; letter-spacing: -0.045em; line-height: 1; }
+.tile-nombre { font-size: 26px; font-weight: 600; letter-spacing: -0.02em; color: var(--tinta); margin-top: 22px; line-height: 1.15; }
+.tile-periodo { font-size: 12px; font-weight: 600; color: var(--gris); text-transform: uppercase; letter-spacing: .04em; margin-top: 6px; }
+.tile-lema { font-size: 17px; color: var(--gris); line-height: 1.42; margin-top: 12px; min-height: 4.4em; letter-spacing: -0.02em; }
 
-/* Resumen y comenzar */
-.resumen { display: flex; flex-direction: column; gap: .2rem; }
-.res-et { font-size: .72rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--salvia); }
-.res-txt { font-size: 1.9rem; font-weight: 600; line-height: 1.15; color: var(--tinta); letter-spacing: -0.01em; }
-.res-txt em { font-style: italic; font-weight: 500; color: var(--oliva); }
-.res-vacio { color: #B0B0B4 !important; font-style: italic; font-weight: 500; }
+/* Papeles de la IA */
+.franja-negra { background: var(--negro); padding: 6px 0 40px; }
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .tile-rol) {
+  background: #1D1D1F; border-radius: 28px; padding: 36px 30px 24px; min-height: 360px; transition: transform .25s ease;
+}
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .tile-rol):hover { transform: scale(1.012); }
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .rol-sel) { box-shadow: 0 0 0 2px var(--azul-oscuro) !important; }
+.rol-eti { font-size: 14px; font-weight: 600; color: var(--gris-2); }
+.rol-nombre { font-size: clamp(28px, 3.1vw, 40px); white-space: nowrap; font-weight: 700; letter-spacing: -0.035em; line-height: 1.05; margin-top: 6px; }
+.rol-texto { font-size: 17px; color: #A1A1A6 !important; line-height: 1.45; margin-top: 16px; min-height: 6em; letter-spacing: -0.02em; }
+.rol-meta { font-size: 12px; color: var(--gris-2); margin: 14px 0 4px; }
+.seccion-oscura { background: var(--negro); }
+.seccion-oscura h2 { color: #F5F5F7 !important; }
+.seccion-oscura p { color: var(--gris-2) !important; }
+.seccion-oscura .eti { color: var(--gris-2); }
 
-/* Botones */
+/* Cifras */
+.cifras { display: flex; justify-content: center; gap: clamp(20px, 5vw, 70px); padding: 30px 0 20px; flex-wrap: wrap; }
+.cifras > div { text-align: center; width: 230px; }
+.cifras b { display: block; font-size: clamp(56px, 8vw, 96px); font-weight: 700; letter-spacing: -0.05em; line-height: 1; }
+.cifras .lbl { display: block; font-size: 17px; color: var(--gris); margin-top: 10px; max-width: 220px; line-height: 1.35; }
+
+/* Comenzar */
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .tile-inicio) {
+  background: var(--gris-fondo); border-radius: 28px; padding: 54px 40px 40px; text-align: center;
+}
+.res-eti { font-size: 17px; font-weight: 600; color: var(--gris); }
+.res-txt { font-size: clamp(28px, 3.6vw, 40px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; color: var(--tinta); margin: 8px 0 26px; }
+.res-txt em { font-style: normal; color: var(--gris); font-weight: 600; }
+.res-vacio { color: #AEAEB2 !important; }
+.aviso { font-size: 12px; color: var(--gris); line-height: 1.5; max-width: 700px; margin: 22px auto 0; text-align: center; }
+
+/* Botones de Streamlit */
 .stButton button, .stDownloadButton button {
-  border-radius: 999px !important; font-weight: 500 !important; padding: .5rem 1.2rem !important;
-  border: 1px solid var(--linea) !important; background: #FFF !important; color: var(--tinta) !important; box-shadow: none !important;
-  transition: background .15s ease, border-color .15s ease, color .15s ease;
+  white-space: nowrap !important; width: auto !important; border-radius: 980px !important; font-weight: 500 !important; font-size: 15px !important; padding: 8px 18px !important; min-height: 0 !important;
+  border: none !important; background: transparent !important; color: var(--azul-link) !important; box-shadow: none !important;
 }
-.stButton button:hover, .stDownloadButton button:hover { border-color: var(--oliva) !important; color: var(--oliva) !important; }
-.stButton button[kind="primary"] { background: var(--oliva) !important; border-color: var(--oliva) !important; color: #FFF !important; }
+.stButton button p, .stDownloadButton button p { color: inherit !important; font-size: 17px !important; white-space: nowrap !important; }
+.stButton button > div { flex-direction: row !important; gap: 6px; }
+.stButton button:hover, .stDownloadButton button:hover { text-decoration: underline; color: var(--azul-link) !important; }
+.stButton button[kind="primary"] { background: var(--azul) !important; color: #FFF !important; }
 .stButton button[kind="primary"] p { color: #FFF !important; }
-.stButton button[kind="primary"]:hover { background: var(--salvia) !important; border-color: var(--salvia) !important; }
-.stButton button:disabled { background: #EDEDE8 !important; border-color: #EDEDE8 !important; }
-.stButton button:disabled p { color: #A0A0A4 !important; }
-.st-key-comenzar button { padding: .85rem 1.4rem !important; font-size: 1.05rem !important; }
+.stButton button[kind="primary"]:hover { background: #0077ED !important; text-decoration: none; }
+.stButton button:disabled { background: #E8E8ED !important; }
+.stButton button:disabled p { color: #AEAEB2 !important; }
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .tile-esc) .stButton, [data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .tile-rol) .stButton { margin-left: -18px; }
+[data-testid="stVerticalBlock"]:has(> [data-testid="stElementContainer"] .tile-rol) .stButton button:not([kind="primary"]) { color: var(--azul-oscuro) !important; }
+.st-key-comenzar { display: flex; justify-content: center; }
+.st-key-comenzar button { padding: 14px 34px !important; }
+.st-key-comenzar button p { font-size: 19px !important; }
 
-/* Avisos */
-.aviso { font-size: .82rem; color: var(--gris); border-left: 2px solid var(--linea); padding: .2rem 0 .2rem 1rem; margin: 1.6rem 0 1.2rem; line-height: 1.6; }
-[data-testid="stExpander"] { border: none !important; border-top: 1px solid var(--linea) !important; border-bottom: 1px solid var(--linea) !important; border-radius: 0 !important; background: transparent; }
-[data-testid="stExpander"] summary p { font-weight: 500; }
-[data-testid="stAlertContainer"] { border-radius: 12px !important; background: var(--cita-fondo) !important; color: var(--oliva) !important; }
-
-/* Colofón */
-.colofon { text-align: center; font-family: var(--serif) !important; font-size: 1.15rem; font-style: italic; color: var(--tinta); margin-top: 4rem; line-height: 1.6; }
-.colofon span { font-family: var(--sans) !important; font-style: normal; font-size: .76rem; color: var(--gris); letter-spacing: .02em; }
+/* Pie */
+.pie { background: var(--gris-fondo); padding: 30px 0 40px; margin-top: 90px; }
+.pie-in { max-width: 980px; margin: 0 auto; padding: 0 22px; font-size: 12px; color: var(--gris); line-height: 1.6; }
+.pie-in .linea { border-top: 1px solid var(--linea); margin: 14px 0; }
+.pie-in b { color: var(--tinta); font-weight: 600; }
+[data-testid="stExpander"] { border: none !important; }
+[data-testid="stExpander"] details { border: none !important; border-top: 1px solid var(--linea) !important; border-radius: 0 !important; }
+[data-testid="stExpander"] summary p { font-size: 15px; color: var(--azul-link) !important; }
 
 /* Sesión */
-.eyebrow { font-size: .72rem; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--salvia); margin-bottom: .4rem; }
-.cabecera-sesion { border-bottom: 1px solid var(--tinta); padding: 1.5rem 0 1rem; margin: 0 0 1.6rem; }
-.cabecera-sesion h2 { margin: 0; font-size: 3.4rem !important; font-weight: 500 !important; font-style: italic; line-height: 1; letter-spacing: -0.015em; }
-[data-testid="stChatMessage"] { background: var(--tarjeta); border: 1px solid var(--linea); border-radius: 16px; box-shadow: var(--sombra); padding: 1.2rem 1.4rem; margin-bottom: 1rem; }
-[data-testid="stChatMessage"]:has(.msg-user) { background: transparent; border: none; box-shadow: none; padding: .4rem 1.4rem .4rem 3.2rem; }
-[data-testid="stChatMessage"]:has(.msg-user) p { font-weight: 500; color: var(--oliva); }
+.cab-sesion { padding: 70px 0 18px; border-bottom: 1px solid var(--linea); margin-bottom: 26px; }
+.cab-sesion .eti { font-size: 17px; font-weight: 600; color: #F56300; }
+.cab-sesion h2 { font-size: clamp(36px, 5vw, 52px) !important; font-weight: 700 !important; letter-spacing: -0.035em !important; line-height: 1.07 !important; margin: 4px 0 0 !important; padding: 0 !important; color: var(--tinta) !important; }
+[data-testid="stChatMessage"] { background: transparent; padding: 0; margin-bottom: 18px; gap: 0; }
+[data-testid="stChatMessage"] > div[aria-hidden="true"], [data-testid="stChatMessage"] [data-testid*="Avatar"], [data-testid="stChatMessageAvatarUser"], [data-testid="stChatMessageAvatarAssistant"], [data-testid="stChatMessageAvatarCustom"] { display: none !important; }
+[data-testid="stChatMessage"] [data-testid="stChatMessageContent"] { background: var(--gris-fondo); border-radius: 22px; padding: 16px 22px; max-width: 88%; }
+[data-testid="stChatMessage"]:has(.msg-user) { flex-direction: row-reverse; }
+[data-testid="stChatMessage"]:has(.msg-user) [data-testid="stChatMessageContent"] { background: var(--azul); border-bottom-right-radius: 6px; max-width: 72%; margin-left: auto; }
+[data-testid="stChatMessage"]:has(.msg-user) p { color: #FFFFFF !important; font-size: 17px; }
+[data-testid="stChatMessage"]:not(:has(.msg-user)) [data-testid="stChatMessageContent"] { border-bottom-left-radius: 6px; }
+[data-testid="stChatMessage"] p { font-size: 17px; line-height: 1.5; }
 [data-testid="stElementContainer"]:has(.msg-user), .msg-user { display: none; }
-[data-testid="stChatMessageAvatarCustom"] { background: var(--cita-fondo) !important; border-radius: 50%; }
-
-/* Citas */
-.stApp blockquote { background: var(--cita-fondo) !important; border-left: 3px solid var(--oliva) !important; border-radius: 0 12px 12px 0 !important;
-  padding: 1.1rem 1.5rem !important; margin: 1.3rem 0 !important; opacity: 1 !important; }
-html body .stApp blockquote, html body .stApp blockquote :is(p,span,em,strong,div):not([data-testid="stIconMaterial"]):not(.material-symbols-rounded):not(.x-georgia) {
-  font-family: "Georgia", serif !important; font-size: 1.04rem; line-height: 1.65; color: #2C3A2C !important; }
-
-/* Entrada */
-[data-testid="stBottom"] > div { background: var(--fondo); }
-[data-testid="stChatInput"] { border-radius: 999px !important; border: 1px solid var(--linea) !important; background: #FFF !important; box-shadow: var(--sombra); }
-[data-testid="stChatInput"]:focus-within { border-color: var(--salvia) !important; }
-[data-testid="stChatInputSubmitButton"] { background: var(--oliva) !important; border-radius: 999px !important; color: #FFF !important; }
-
-/* Barra lateral */
-[data-testid="stSidebar"] { background: var(--lateral); border-right: 1px solid var(--linea); }
-[data-testid="stSidebar"] h3 { font-size: 2.1rem !important; font-weight: 500 !important; font-style: italic; margin-top: .1rem; line-height: 1.05; }
-[data-testid="stSidebar"] h4 { font-size: .72rem !important; letter-spacing: .16em; text-transform: uppercase; color: var(--salvia) !important; margin-top: 1.6rem; border-top: 1px solid var(--linea); padding-top: 1.2rem; }
-.chip { display: inline-block; padding: .22rem .7rem; border-radius: 999px; background: #FFF; border: 1px solid var(--linea); color: var(--tinta); font-size: .76rem; margin: 0 .3rem .3rem 0; }
-.ficha dt { font-weight: 600; color: var(--oliva); font-size: .7rem; text-transform: uppercase; letter-spacing: .1em; margin-top: 1rem; }
-.ficha dd { margin: .2rem 0 0 0; color: var(--tinta); font-size: .9rem; line-height: 1.6; }
-[data-testid="stProgress"] > div > div > div > div { background: var(--oliva) !important; }
-.credito { margin-top: 2rem; font-size: .76rem; color: var(--gris); line-height: 1.5; }
-.credito strong { font-family: var(--serif) !important; font-style: italic; font-size: 1.05rem; color: var(--tinta); font-weight: 600; }
-
-@media (max-width: 640px) { .titulo { font-size: 3.2rem !important; } .cap-titulo { font-size: 1.6rem; } }
+.stApp blockquote { border-left: 3px solid transparent !important; border-image: linear-gradient(#FF9F0A, #BF5AF2) 1 !important; background: #FFFFFF !important; border-radius: 0 14px 14px 0; padding: 14px 20px !important; margin: 14px 0 !important; opacity: 1 !important; }
+html body .stApp blockquote :is(p,span,em,strong):not([data-testid="stIconMaterial"]):not(.material-symbols-rounded):not(.x-serif) { font-family: var(--serif) !important; font-size: 18px; line-height: 1.55; color: #1D1D1F !important; font-style: italic; }
+[data-testid="stBottom"] > div { background: rgba(255,255,255,.9); }
+[data-testid="stChatInput"] { border-radius: 980px !important; border: 1px solid var(--linea) !important; background: #FFFFFF !important; }
+[data-testid="stChatInput"]:focus-within { border-color: var(--azul) !important; box-shadow: 0 0 0 4px rgba(0,113,227,.15); }
+[data-testid="stChatInputSubmitButton"] { background: var(--azul) !important; border-radius: 50% !important; color: #FFF !important; }
+[data-testid="stSidebar"] { background: var(--gris-fondo); border-right: 1px solid var(--linea); }
+[data-testid="stSidebar"] .eyebrow { font-size: 12px; font-weight: 600; color: #F56300; text-transform: none; }
+[data-testid="stSidebar"] h3 { font-size: 28px !important; font-weight: 700 !important; letter-spacing: -0.03em; line-height: 1.1; color: var(--tinta) !important; }
+[data-testid="stSidebar"] h4 { font-size: 12px !important; font-weight: 600 !important; color: var(--gris) !important; text-transform: uppercase; letter-spacing: .04em; margin-top: 22px; }
+.chip { display: inline-block; padding: 4px 12px; border-radius: 980px; background: #FFFFFF; border: 1px solid var(--linea); font-size: 12px; margin: 0 6px 6px 0; color: var(--tinta); }
+.ficha dt { font-size: 12px; font-weight: 600; color: var(--tinta); margin-top: 14px; }
+.ficha dd { margin: 2px 0 0 0; font-size: 14px; color: var(--gris); line-height: 1.5; }
+[data-testid="stProgress"] > div > div > div > div { background: var(--azul) !important; }
+[data-testid="stSidebar"] .stButton button, [data-testid="stSidebar"] .stDownloadButton button { padding-left: 0 !important; }
+.credito { margin-top: 24px; font-size: 12px; color: var(--gris); line-height: 1.5; }
+.credito .autor { color: var(--tinta); font-weight: 600; }
+@media (max-width: 760px) { .navlocal nav a:not(.pildora) { display: none; } .heroa { padding-top: 120px; } .crono-fila span { display: none; } }
 </style>
 """,
     unsafe_allow_html=True,
@@ -201,6 +231,7 @@ def transcripcion() -> str:
     lineas = [
         "# Historia del pensamiento económico — registro de la sesión",
         "Taller con IA · Alexander Tobón Arias  ",
+        "Paola Zapata  ",
         f"Escuela: {e['nombre']}  ",
         f"Rol de la IA: {r['nombre']}  ",
         f"Fecha: {ss.inicio:%Y-%m-%d %H:%M}",
@@ -233,100 +264,143 @@ def ficha_html(escuela_id: str) -> str:
 # ---------------------------------------------------------------------------
 # Pantalla 1: elegir escuela y rol
 # ---------------------------------------------------------------------------
-NUMERALES = ["I", "II", "III", "IV", "V", "VI"]
-AUTOR = "Alexander Tobón Arias"
+AUTORES = ["Alexander Tobón Arias", "Paola Zapata"]
+ANIOS = {"mercantilismo": "1664", "fisiocracia": "1758", "clasica": "1776",
+         "neoclasica": "1871", "marxista": "1867", "keynesiana": "1936"}
+GRADIENTES = {
+    "mercantilismo": "linear-gradient(135deg,#FF9F0A,#FF375F)",
+    "fisiocracia": "linear-gradient(135deg,#30D158,#00C7BE)",
+    "clasica": "linear-gradient(135deg,#0A84FF,#5E5CE6)",
+    "neoclasica": "linear-gradient(135deg,#64D2FF,#0A84FF)",
+    "marxista": "linear-gradient(135deg,#FF453A,#BF5AF2)",
+    "keynesiana": "linear-gradient(135deg,#BF5AF2,#5E5CE6)",
+}
+GRAD_ROL = {"tutor": "linear-gradient(90deg,#2997FF,#64D2FF)",
+            "estudiante": "linear-gradient(90deg,#FF9F0A,#FF375F)",
+            "simulador": "linear-gradient(90deg,#BF5AF2,#FF375F)"}
+
+
+def autores_html(clase_autor: str = "autor") -> str:
+    return "".join(f"<div class='{clase_autor}'>{a}</div>" for a in AUTORES)
+
+
+@st.cache_data(show_spinner=False)
+def cifras_corpus() -> tuple[int, int]:
+    import pathlib, re as _re
+    archivos = {p.name: p for p in pathlib.Path("corpus").glob("*/*.md") if p.name != "LEEME.md"}  # sin repetidos
+    titulos = [p.read_text(encoding="utf-8").split("\n", 1)[0] for p in archivos.values()]
+    autores = set()
+    for t in titulos:
+        nombre = t.lstrip("# ").split(",")[0]
+        for a in _re.split(r"\s+y\s+", nombre):
+            autores.add(a.strip())
+    return len(titulos), len(autores)
+
+
+def gtxt(texto: str, gradiente: str) -> str:
+    return (f"<span style='background:{gradiente};-webkit-background-clip:text;background-clip:text;"
+            f"color:transparent;-webkit-text-fill-color:transparent'>{texto}</span>")
 
 
 def pantalla_inicio():
-    demo = "" if hay_clave() else "<span class='demo'>Modo demostración · respuestas de ejemplo</span>"
+    n_textos, n_autores = cifras_corpus()
+    demo = "" if hay_clave() else "<div><span class='demo'>Modo demostración · respuestas de ejemplo</span></div>"
     st.markdown(
         f"""
-<header class="portada">
-  <div class="sello">Taller con inteligencia artificial</div>
-  <h1 class="titulo">Historia del<br><em>pensamiento económico</em></h1>
-  <div class="filete"><span></span><i>❦</i><span></span></div>
-  <p class="bajada">Seis escuelas y tres maneras de conversar con la IA para reconstruir cada teoría desde sus propios problemas.
-  La IA pregunta, se equivoca a propósito o te sitúa en la historia; el razonamiento es tuyo.</p>
-  <div class="autoria">Un proyecto de <strong>{AUTOR}</strong></div>
+<div class="navlocal"><div class="marca">Historia del pensamiento económico</div>
+  <nav><a href="#escuelas">Escuelas</a><a href="#papeles">La IA</a><a href="#fuentes">Fuentes</a><a class="pildora" href="#comenzar">Comenzar</a></nav></div>
+<section class="ancho heroa">
+  <div class="nuevo">Taller con inteligencia artificial</div>
+  <h1>Pensar la economía<br><span class="grad">con quienes la inventaron.</span></h1>
+  <p class="sub">Seis escuelas. Tres maneras de conversar con la IA. Y {n_textos} textos originales para comprobar cada idea en su fuente.</p>
+  <div class="acciones"><a class="btn-azul" href="#comenzar">Empezar una sesión</a><a class="link-azul" href="#fuentes">Ver las fuentes ›</a></div>
+  <div class="autores">Un proyecto de<b>{AUTORES[0]}</b><b>{AUTORES[1]}</b></div>
   {demo}
-</header>
+</section>
+<section class="ancho crono"><div class="crono-fila">
+  <div><b>1664</b><span>Mun</span></div><div><b>1758</b><span>Quesnay</span></div><div><b>1776</b><span>Smith</span></div>
+  <div><b>1817</b><span>Ricardo</span></div><div><b>1867</b><span>Marx</span></div><div><b>1890</b><span>Marshall</span></div><div><b>1936</b><span>Keynes</span></div>
+</div></section>
+<div class="seccion" id="escuelas"><div class="eti">Escuelas</div><h2>Cinco siglos de ideas.<br>Elige por dónde empezar.</h2>
+<p>Cada escuela parte de un problema distinto. Reconstrúyela desde ese problema, con sus propias palabras.</p></div>
 """,
         unsafe_allow_html=True,
     )
+    items = list(ESCUELAS.items())
+    for fila in range(0, len(items), 3):
+        cols = st.columns(3, gap="medium")
+        for col, (eid, e) in zip(cols, items[fila:fila + 3]):
+            elegida = ss.escuela == eid
+            with col.container():
+                st.markdown(
+                    f"<div class='tile-esc {'tile-sel' if elegida else ''}'></div>"
+                    f"<div class='tile-anio'>{gtxt(ANIOS.get(eid, ''), GRADIENTES.get(eid, ''))}</div>"
+                    f"<div class='tile-nombre'>{e['nombre']}</div><div class='tile-periodo'>{e['periodo']}</div>"
+                    f"<div class='tile-lema'>{e['lema']}</div>",
+                    unsafe_allow_html=True,
+                )
+                if st.button("✓ Elegida" if elegida else "Elegir ›", key=f"esc_{eid}", type="primary" if elegida else "secondary"):
+                    ss.escuela = eid
+                    st.rerun()
 
-    # I. Escuela
     st.markdown(
-        "<div class='capitulo'><span class='cap-num'>I</span><div><div class='cap-titulo'>Elige una escuela</div>"
-        "<div class='cap-sub'>Seis tradiciones, de los mercaderes del siglo XVI a Keynes.</div></div></div>",
-        unsafe_allow_html=True,
-    )
-    for n, (eid, e) in zip(NUMERALES, ESCUELAS.items()):
-        elegida = ss.escuela == eid
-        with st.container():
-            marca = "fila-elegida" if elegida else "fila"
-            c1, c2, c3 = st.columns([0.55, 4.2, 1.45], vertical_alignment="center")
-            c1.markdown(f"<div class='{marca} indice-num'>{n}</div>", unsafe_allow_html=True)
-            c2.markdown(
-                f"<div class='indice-nombre'>{e['nombre']}</div>"
-                f"<div class='indice-lema'>{e['lema']} <span class='indice-periodo'>{e['periodo']}</span></div>",
-                unsafe_allow_html=True,
-            )
-            if c3.button("Elegida ✓" if elegida else "Elegir", key=f"esc_{eid}",
-                         type="primary" if elegida else "secondary", use_container_width=True):
-                ss.escuela = eid
-                st.rerun()
-
-    # II. Rol
-    st.markdown(
-        "<div class='capitulo'><span class='cap-num'>II</span><div><div class='cap-titulo'>Elige el papel de la IA</div>"
-        "<div class='cap-sub'>Según Mollick y Mollick (2023), adaptados al método de Marcuzzo (2008).</div></div></div>",
+        "<div class='seccion' id='papeles'>"
+        "<div class='eti'>La IA</div><h2>Tres maneras de conversar.</h2>"
+        "<p>La IA no te hace la tarea: te pregunta, se equivoca a propósito o te pone a decidir en la historia.</p></div>",
         unsafe_allow_html=True,
     )
     cols = st.columns(len(ROLES), gap="medium")
     for col, (rid, r) in zip(cols, ROLES.items()):
         elegido = ss.rol == rid
-        with col.container(border=True):
+        with col.container():
             st.markdown(
-                f"<div class='{'rol-elegido' if elegido else 'rol'}'></div>"
-                f"<div class='rol-pre'>La IA como</div>"
-                f"<div class='rol-nombre'>{r['nombre'].lower()}</div>"
+                f"<div class='tile-rol {'rol-sel' if elegido else ''}'></div>"
+                f"<div class='rol-eti'>La IA como</div>"
+                f"<div class='rol-nombre'>{gtxt(r['nombre'] + '.', GRAD_ROL.get(rid, GRAD_ROL['tutor']))}</div>"
                 f"<div class='rol-texto'>{r['resumen']}</div>"
                 f"<div class='rol-meta'>Hasta {r['max_intercambios']} intercambios</div>",
                 unsafe_allow_html=True,
             )
-            if st.button("Elegido ✓" if elegido else "Elegir", key=f"rol_{rid}",
-                         type="primary" if elegido else "secondary", use_container_width=True):
+            if st.button("✓ Elegido" if elegido else "Elegir ›", key=f"rol_{rid}", type="primary" if elegido else "secondary"):
                 ss.rol = rid
                 st.rerun()
 
-    # III. Comenzar
     st.markdown(
-        "<div class='capitulo'><span class='cap-num'>III</span><div><div class='cap-titulo'>Comienza la sesión</div>"
-        "<div class='cap-sub'>Al terminar, descarga la conversación y entrégala con tu reflexión.</div></div></div>",
+        f"""
+<div class="seccion" id="fuentes"><div class="eti">Fuentes</div><h2>Cada idea, en su texto original.</h2>
+<p>La IA cita pasajes de las obras en su edición original o en traducciones históricas, y los traduce para ti.</p></div>
+<div class="cifras">
+  <div><b>{gtxt(str(n_textos), 'linear-gradient(135deg,#FF9F0A,#FF375F)')}</b><span class='lbl'>textos originales en dominio público</span></div>
+  <div><b>{gtxt(str(n_autores), 'linear-gradient(135deg,#0A84FF,#BF5AF2)')}</b><span class='lbl'>autores, de Mun a Hobson</span></div>
+  <div><b>{gtxt(str(len(ESCUELAS) * len(ROLES)), 'linear-gradient(135deg,#30D158,#0A84FF)')}</b><span class='lbl'>combinaciones de escuela y papel de la IA</span></div>
+</div>
+<div class="seccion" id="comenzar" style="padding-top:90px"><div class="eti">Comenzar</div><h2>Tu sesión, en un clic.</h2></div>
+""",
         unsafe_allow_html=True,
     )
     listo = ss.escuela and ss.rol
-    if listo:
-        resumen = (f"<span class='res-et'>Tu sesión</span><span class='res-txt'>{ESCUELAS[ss.escuela]['nombre']}"
-                   f" <em>con la IA como {ROLES[ss.rol]['nombre'].lower()}</em></span>")
-    else:
-        resumen = "<span class='res-et'>Tu sesión</span><span class='res-txt res-vacio'>Elige una escuela y un papel para la IA</span>"
-    c1, c2 = st.columns([2.6, 1.4], vertical_alignment="center")
-    c1.markdown(f"<div class='resumen'>{resumen}</div>", unsafe_allow_html=True)
-    with c2:
-        if st.button("Comenzar →", type="primary", disabled=not listo, use_container_width=True, key="comenzar"):
+    with st.container():
+        if listo:
+            resumen = (f"<div class='res-txt'>{ESCUELAS[ss.escuela]['nombre']}<br>"
+                       f"<em>con la IA como {ROLES[ss.rol]['nombre'].lower()}.</em></div>")
+        else:
+            resumen = "<div class='res-txt res-vacio'>Elige una escuela<br>y un papel para la IA.</div>"
+        st.markdown(f"<div class='tile-inicio'></div><div class='res-eti'>Tu sesión</div>{resumen}", unsafe_allow_html=True)
+        if st.button("Comenzar la sesión", type="primary", disabled=not listo, key="comenzar"):
             iniciar_sesion()
             st.rerun()
-    st.markdown(f"<div class='aviso'>{AVISO_PRIVACIDAD}</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='aviso'>{AVISO_PRIVACIDAD}</div>", unsafe_allow_html=True)
 
     with st.expander("Las tres intencionalidades formativas del curso"):
         for k, v in INTENCIONALIDADES.items():
             st.markdown(f"**{k.capitalize()}.** {v}")
 
     st.markdown(
-        f"<footer class='colofon'><div class='filete'><span></span><i>❦</i><span></span></div>"
-        f"Historia del pensamiento económico · {AUTOR}<br>"
-        f"<span>Roles de Mollick y Mollick (2023) · Método de Marcuzzo (2008)</span></footer>",
+        f"""<div class="ancho pie"><div class="pie-in">
+Las respuestas de la IA pueden equivocarse: verifica cada cita en la obra original. Los textos del corpus están en dominio público.
+<div class="linea"></div>
+<b>Historia del pensamiento económico · Taller con IA</b><br>Un proyecto de {AUTORES[0]}<br>{AUTORES[1]}
+<div class="linea"></div>Roles de Mollick y Mollick (2023) · Método de Marcuzzo (2008)</div></div>""",
         unsafe_allow_html=True,
     )
 
@@ -361,17 +435,17 @@ def pantalla_sesion():
             terminar_sesion()
             st.rerun()
         st.markdown(f"<div class='aviso'>{AVISO_PRIVACIDAD}</div>", unsafe_allow_html=True)
-        st.markdown(f"<div class='credito'>Historia del pensamiento económico<br><strong>{AUTOR}</strong></div>",
+        st.markdown(f"<div class='credito'>Historia del pensamiento económico{autores_html()}</div>",
                     unsafe_allow_html=True)
 
     # Cabecera
     st.markdown(
-        f"<div class='cabecera-sesion'><div class='eyebrow'>La IA como {r['nombre'].lower()} · {e['periodo']}</div>"
+        f"<div class='cab-sesion'><div class='eti'>La IA como {r['nombre'].lower()} · {e['periodo']}</div>"
         f"<h2>{e['nombre']}</h2></div>",
         unsafe_allow_html=True,
     )
     if not hay_clave():
-        st.markdown("<span class='demo'>Modo demostración · respuestas de ejemplo</span>", unsafe_allow_html=True)
+        st.markdown("<span class='demo demo-claro'>Modo demostración · respuestas de ejemplo</span>", unsafe_allow_html=True)
 
     prompt_sistema = construir_prompt(ss.escuela, ss.rol)
 

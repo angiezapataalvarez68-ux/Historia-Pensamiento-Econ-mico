@@ -1,6 +1,7 @@
 # Historia del pensamiento económico · Taller con IA
 
 Proyecto de Alexander Tobón Arias.
+Paola Zapata.
 
 App para el trabajo independiente del curso de Historia del Pensamiento Económico.
 Tobón y Zapata (2026). Roles de Mollick y Mollick (2023); método de Marcuzzo (2008).

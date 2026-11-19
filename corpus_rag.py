@@ -135,7 +135,13 @@ GLOSARIO = {
     "precio de oferta": "supply price", "precio de demanda": "demand price", "corto plazo": "short period",
     "largo plazo": "long period", "anticipos": "advances", "avances": "advances", "clase productiva": "productive class",
     "gastos esteriles": "sterile expenses", "vend": "sell sold exportation", "extranjer": "strangers foreign forraign",
-    "compra": "buy consume importation", "consum": "consume consumption", "comerciante": "merchant merchants", "propietario": "proprietor proprietors", "agricultor": "cultivator farmer",
+    "compra": "buy consume importation", "subconsumo": "under-consumption underconsumption saving",
+    "sobreproduccion": "glut overproduction general glut", "demanda efectiva": "effectual demand effective demand consumption",
+    "ley de say": "markets glut produce demand", "ley de los mercados": "markets glut produce demand",
+    "acumulacion originaria": "primitive accumulation", "mano invisible": "invisible hand", "imperialismo": "imperialism",
+    "rendimientos decrecientes": "diminishing return", "rendimientos crecientes": "increasing return",
+    "tasa de interes": "rate of interest", "moneda": "money coin", "aritmetica politica": "political arithmetick",
+    "poblacion": "population people", "desempleo": "unemployed employment", "atesoramiento": "hoarding hoard", "consum": "consume consumption", "comerciante": "merchant merchants", "propietario": "proprietor proprietors", "agricultor": "cultivator farmer",
 }
 
 
@@ -159,7 +165,7 @@ class Buscador:
     def fuentes(self) -> list[str]:
         return sorted({f.fuente for f in self.fragmentos})
 
-    def buscar(self, consulta: str, k: int = 4) -> list[Fragmento]:
+    def buscar(self, consulta: str, k: int = 5) -> list[Fragmento]:
         """La ficha siempre va primero; luego los k fragmentos más parecidos."""
         resultado = [self.fragmentos[0]]
         if len(self.fragmentos) == 1 or not consulta.strip():
@@ -171,7 +177,18 @@ class Buscador:
 
 
 def formatear_contexto(fragmentos: list[Fragmento]) -> str:
-    partes = ["FRAGMENTOS DEL CORPUS DEL CURSO (úsalos como base y cítalos textualmente):"]
-    for i, f in enumerate(fragmentos, 1):
-        partes.append(f"[{i}] Fuente: {f.fuente}\n{f.texto}")
+    """La ficha del curso va aparte, como orientación interna que no se cita."""
+    ficha = [f for f in fragmentos if f.fuente.startswith("Ficha del curso")]
+    obras = [f for f in fragmentos if not f.fuente.startswith("Ficha del curso")]
+    partes = []
+    if ficha:
+        partes.append("ORIENTACIÓN INTERNA DEL CURSO (no es una fuente: úsala para guiar la conversación, "
+                      "pero NUNCA la cites ni la menciones como fuente):\n" + ficha[0].texto)
+    if obras:
+        partes.append("PASAJES DE LAS OBRAS ORIGINALES (son las únicas fuentes que puedes citar, textualmente):")
+        for i, f in enumerate(obras, 1):
+            partes.append(f"[{i}] Obra: {f.fuente}\n{f.texto}")
+    else:
+        partes.append("No se encontraron pasajes de las obras para esta consulta: no inventes citas; "
+                      "pide al estudiante que precise la pregunta o razona sin citar.")
     return "\n\n".join(partes)
