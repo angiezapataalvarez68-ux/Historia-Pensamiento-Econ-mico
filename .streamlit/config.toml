@@ -1,0 +1,16 @@
+  [theme]
+  base = "light"
+  primaryColor = "#0071E3"
+  backgroundColor = "#FFFFFF"
+  secondaryBackgroundColor = "#F5F5F7"
+  textColor = "#1D1D1F"
+  font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+
+  [server]
+  headless = true
+
+  [browser]
+  gatherUsageStats = false
+
+  [client]
+  toolbarMode = "viewer"
