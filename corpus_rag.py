@@ -190,7 +190,28 @@ GLOSARIO = {
     "rendimientos decrecientes": "diminishing return", "rendimientos crecientes": "increasing return",
     "tasa de interes": "rate of interest", "moneda": "money coin", "aritmetica politica": "political arithmetick",
     "poblacion": "population people", "desempleo": "unemployed employment", "atesoramiento": "hoarding hoard", "consum": "consume consumption", "comerciante": "merchant merchants", "propietario": "proprietor proprietors", "agricultor": "cultivator farmer",
+    # Términos nuevos (2026-11): banca, marginalismo, institucionalismo
+    "banco central": "bank of england reserve lender", "prestamista": "lender last resort advance", "reserva": "reserve reserves",
+    "credito": "credit bills", "billete": "bank notes paper currency", "oro": "gold bullion", "deprecia": "depreciation",
+    "margin": "margin marginal final degree of utility", "intercambio": "exchange", "preferencia temporal": "present future goods",
+    "rodeo": "roundabout methods", "produccion indirecta": "roundabout methods", "productividad marginal": "final productivity specific product",
+    "consumo ostentoso": "conspicuous consumption", "ocio": "leisure", "clase ociosa": "leisure class", "empresa": "business enterprise",
+    "fuerzas productivas": "productive powers", "proteccion": "protection protective", "metodo": "method logical",
+    "tasa natural": "natural rate", "abstinencia": "abstinence",
 }
+
+# Algunas obras del corpus están en alemán (Marx, Theorien über den Mehrwert; Luxemburg; Hilferding):
+# se añaden los términos alemanes para que la búsqueda también las encuentre.
+GLOSARIO_DE = {
+    "plusvalia": "Mehrwert", "acumulacion": "Akkumulation akkumulieren", "reproduccion": "Reproduktion",
+    "crisis": "Krise Krisen Überproduktion", "sobreproduccion": "Überproduktion", "trabajo productivo": "produktive Arbeit",
+    "trabajo improductivo": "unproduktive Arbeit", "capital financiero": "Finanzkapital", "banco": "Bank Banken Bankkapital",
+    "monopolio": "Monopol Monopole Kartelle", "cartel": "Kartelle Trusts", "imperialismo": "Imperialismus Kapitalexport",
+    "exportacion de capital": "Kapitalexport", "tasa de ganancia": "Profitrate", "ganancia": "Profit", "valor": "Wert",
+    "precio": "Preis", "salario": "Arbeitslohn", "mercado": "Markt Absatz", "consum": "Konsumtion", "renta": "Rente Grundrente",
+}
+for _es, _de in GLOSARIO_DE.items():
+    GLOSARIO[_es] = (GLOSARIO.get(_es, "") + " " + _de).strip()
 
 
 def _expandir(consulta: str) -> str:
